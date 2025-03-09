@@ -1,4 +1,8 @@
 # 使用过程记录
+其目標是建立一個 名為 "rsvp list" 的完整功能模組。這個模組的核心目的是讓網站使用者能夠在行銷團隊推廣的活動內容節點上選擇是否參加（RSVP），並且讓行銷團隊可以取得與會者名單及其電子郵件地址。為了實現這個功能，開發過程將會深入探討 Drupal API 的多個關鍵部分，例如建立表單、與資料庫互動、建立控制器以顯示報表、以及建立後台管理設定頁面，同時也會修改內容編輯表單，讓編輯者能選擇是否啟用 RSVP 功能。
+
+记录youtube 模块开发教程 16-35课
+
 ## 安装过程
 ### 先git项目
 ```
@@ -8,11 +12,29 @@ ddev composer install
 ddev drush site:install  --site-name=rsvplist --account-name=admin --account-pass=admin -y
 ddev drush  sql:cli <database.sql
 ddev drush  cr
+//删除.git
+rm -rf .git
+//配置。.gitignore
+建立 资源库
+
 ```
 ## 构建模块
 
+### 第 16 課：RSVP 模組介绍
+
+其目標是建立一個 名為 "rsvp list" 的完整功能模組。這個模組的核心目的是讓網站使用者能夠在行銷團隊推廣的活動內容節點上選擇是否參加（RSVP），並且讓行銷團隊可以取得與會者名單及其電子郵件地址。為了實現這個功能，開發過程將會深入探討 Drupal API 的多個關鍵部分，例如建立表單、與資料庫互動、建立控制器以顯示報表、以及建立後台管理設定頁面，同時也會修改內容編輯表單，讓編輯者能選擇是否啟用 RSVP 功能。
+
+
 
 ### 第 17 課：建立 RSVP 列表模組
+
+```
+//生成框架
+ddev drush generate module --destination=modules/custom
+//还没有配置configure 鍵值
+configure: rsvplist.admin_settings
+```
+[模块yml文件的具体含义](https://www.drupal.org/docs/develop/creating-modules/let-drupal-know-about-your-module-with-an-infoyml-file#s-complete-example])
 
 我們開始建立名為 rsvp_list 的自訂模組，並在 modules/custom 目錄下建立 rsvp_list 資料夾。
 
@@ -20,7 +42,9 @@ ddev drush  cr
 
 影片中也介紹了 dependencies 和 configure 這兩個新的鍵，以及 YAML 檔案中字串的處理方式，說明技術上字串是純量，除非開頭或包含特殊字元，否則不需要使用引號。dependencies 鍵用於宣告模組所依賴的其他模組（使用 project_name:module_name 的命名空間格式，例如 drupal:block），而 configure 鍵則用於指定模組設定表單的路徑。
 
+
 最後，我們在 Drupal 管理介面的擴充功能頁面啟用了這個模組。
+
 
 ### 第 18 課：Form API 與在 Drupal 中建立表單
 
