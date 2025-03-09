@@ -48,6 +48,9 @@ configure: rsvplist.admin_settings
 
 ### 第 18 課：Form API 與在 Drupal 中建立表單
 
+[元素链接](https://api.drupal.org/api/drupal/elements/11.x)
+
+
 本課介紹了 Drupal 的 Form API，它包含三個循序執行的部分：顯示 HTML 表單、驗證使用者輸入的資料，以及處理表單的提交。
 
 Form API 提供了一個框架來建立表單，抽象化了 HTML 表單的處理，目的是提高表單處理和呈現的一致性，並減少需要手動編寫的 HTML 程式碼。
@@ -55,17 +58,29 @@ Form API 提供了一個框架來建立表單，抽象化了 HTML 表單的處�
 表單是使用**多維陣列（render array）**來描述的。
 
 Drupal 中常用的三種表單類型是：
-▪
-FormBase：最通用的基底類別，用於建立一般表單. 我們的 RSVP 詳細資訊收集表單將使用它.
-▪
-ConfigFormBase：用於建立系統設定表單. 管理員設定哪些內容類型啟用 RSVP 功能的表單將使用它.
-▪
-ConfirmFormBase：用於建立確認操作的表單.
+
+* FormBase：最通用的基底類別，用於建立一般表單. 我們的 RSVP 詳細資訊收集表單將使用它.
+
+* ConfigFormBase：用於建立系統設定表單. 管理員設定哪些內容類型啟用 RSVP 功能的表單將使用它.
+
+* ConfirmFormBase：用於建立確認操作的表單.
+```
+drush generate form:simple
+drush generate form:config
+drush generate form:confirm
+```
 
 每種表單類型都有三個必要的的方法：getFormId()、buildForm() 和 submitForm()。buildForm() 方法是宣告表單 render array 的正確位置。
 
 ### 第 19 課：建立電子郵件提交表單
 
+
+```
+//生成表单
+ddev drush generate form:simple
+
+
+```
 我們開始建立收集 RSVP 詳細資訊的表單。首先在 rsvp_list/src 目錄下建立 Form 資料夾，並在其中建立 RSVPForm.php 檔案。
 
 RSVPForm 類別繼承自 FormBase 並實作了 FormInterface。
