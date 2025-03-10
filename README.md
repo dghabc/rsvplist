@@ -108,6 +108,7 @@ submitForm() 方法目前只會顯示一個訊息，表明表單正在運作，�
 如果電子郵件無效，我們使用 $form_state->setErrorByName('email', $this->t('It appears that %mail is not a valid email.', ['%mail' => $value])) 來設定錯誤訊息。
 
 ### 第 22 課：資料庫 API 簡介
+[数据库抽象层](https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Database%21database.api.php/group/database/11.x)
 
 本課概述了 Drupal 的 Database API，它提供了一個與底層資料庫無關的抽象層，允許開發人員編寫一次查詢，即可在多種資料庫上運作。
 
