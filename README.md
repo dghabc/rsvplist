@@ -124,6 +124,10 @@ submitForm() 方法目前只會顯示一個訊息，表明表單正在運作，�
 
 ### 第 23 課：安裝檔案與使用資料庫結構描述
 
+```
+//生生hook_schema
+ddev drush gen hook
+```
 本課介紹了 Schema API，它允許模組透過結構化的陣列來宣告其資料庫表。
 
 我們在 rsvp_list 模組的根目錄下建立 rsvplist.install 檔案。
