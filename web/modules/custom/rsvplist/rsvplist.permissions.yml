@@ -1,0 +1,11 @@
+administer rsvplist configuration:
+  title: 'Administer rsvplist configuration'
+  description: 'admin rsvp configuration'
+  restrict access: true
+view rsvplist:
+  title: 'View RSVP Form'
+  description: 'RSVP Form submit'
+view rsvplist report:
+  title: 'View RSVP report'
+  description: 'RSVP list report'
+
