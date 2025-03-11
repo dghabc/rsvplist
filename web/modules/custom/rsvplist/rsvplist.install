@@ -4,3 +4,67 @@
  * @file
  * Install, update and uninstall functions for the rsvplist module.
  */
+
+/**
+ * Implements hook_schema().
+ */
+function rsvplist_schema(): array {
+  $schema['rsvplist'] = [
+    'description' => 'Stores rsvplist module data as key/value pairs per user.',
+    'fields' => [
+      'id' => [
+        'description' => 'id',
+        'type' => 'serial',
+        'size' => 'small',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'uid' => [
+        'description' => 'The {users}.uid this record affects.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'nid' => [
+        'description' => 'The {node}.uid this record affects.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'mail' => [
+        'description' => 'email of the module declaring the variable.',
+        'type' => 'varchar',
+        'length' => '64',
+        'not null' => FALSE,
+        'default' => '',
+
+      ],
+      'created' => [
+        'description' => 'The identifier of the data.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+    ],
+    'primary key' => ['id'],
+    'indexes' => [
+      'node' => ['nid'],
+      'node_user' => ['nid', 'uid'],
+    ],
+  ];
+  $schema['rsvplist_enable'] = [
+    'description' => 'Stores rsvplist module data as key/value pairs per node.',
+    'fields' => [
+      'nid' => [
+        'description' => 'The {node}.nid this record affects.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+    ],
+    'primary key' => ['nid'],
+  ];
+  return $schema;
+}

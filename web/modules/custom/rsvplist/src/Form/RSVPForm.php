@@ -80,11 +80,28 @@ final class RSVPForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state): void {
-    $sendmail = $form_state->getValue("email");
-    $sendnid = $form_state->getValue("nid");
-    $this->messenger()->addStatus($this->t("you  message is @sendmail", ['@sendmail' => $sendmail]));
-    $this->messenger()->addStatus($this->t("you  nid is @sendnid", ['@sendnid' => $sendnid]));
 
+    try {
+      $mail = $form_state->getValue("email");
+      $nid = $form_state->getValue("nid");
+      $created = \DRUPAL::time()->getCurrentTime();
+      /**
+       * @var Drupal\Core\Session\AccountProxy
+       */
+      $uid = \Drupal::service('current_user')->id();
+      /**
+       * @var Drupal\Core\Database\Connection
+       */
+      $query = \Drupal::service('database')->insert('rsvplist');
+      $query->fields(['uid', 'nid', 'mail', 'created']);
+      $query->values([$uid, $nid, $mail, $created]);
+      $query->execute();
+      $this->messenger()->addStatus($this->t("you  message is save"));
+
+    }
+    catch (\Exception $e) {
+      $this->messenger()->addError($e);
+    }
     // $form_state->setRedirect('<front>');
   }
 
