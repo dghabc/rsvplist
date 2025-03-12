@@ -31,7 +31,7 @@ rm -rf .git
 ```
 //生成框架
 ddev drush generate module --destination=modules/custom
-//还没有配置configure 鍵值
+//还没有配置configure 鍵值，这个作用是在模块列表上显示Configure图标
 configure: rsvplist.admin_settings
 ```
 [模块yml文件的具体含义](https://www.drupal.org/docs/develop/creating-modules/let-drupal-know-about-your-module-with-an-infoyml-file#s-complete-example])
