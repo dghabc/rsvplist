@@ -151,7 +151,7 @@ ddev drush gen hook
 ```
  ddev drush generate yml:permissions
 
-'''
+```
 我們在 rsvp_list 模組的根目錄下建立 rsvplist.permissions.yaml 檔案，來定義三個自訂權限：view rsvp list、access rsvp list report 和 administer rsvp list。
 
 這些權限可以讓網站管理員更精細地控制誰可以 RSVP、存取報表和管理設定。
@@ -164,7 +164,7 @@ ddev drush gen hook
 
 ```
 ddev drush generate plugin:block
-
+```
 
 
 我們開始將之前建立的表單整合到一個區塊中。首先，在 rsvp_list/src/Plugin/Block 目錄下建立 RSVPBlock.php 檔案。
