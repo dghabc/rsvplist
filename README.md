@@ -174,6 +174,7 @@ build() 方法目前只回傳一些基本的標記文字。
 
 ### 第 28 課：設定 API 簡介
 
+[配置API](https://www.drupal.org/docs/drupal-apis/configuration-api/configuration-schemametadata)
 本課介紹了 Drupal 的 Configuration API，它提供了一個統一的方法來儲存和管理網站的設定資料，這些資料在不同的環境之間保持一致。
 
 設定被劃分為個別的設定物件，每個物件都有一個唯一的名稱，並以 YAML 格式儲存在檔案中。
