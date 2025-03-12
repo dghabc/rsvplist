@@ -148,6 +148,10 @@ ddev drush gen hook
 
 ### 第 25 課：定義自訂權限 - 彈性存取控制
 
+```
+ ddev drush generate yml:permissions
+
+
 我們在 rsvp_list 模組的根目錄下建立 rsvplist.permissions.yaml 檔案，來定義三個自訂權限：view rsvp list、access rsvp list report 和 administer rsvp list。
 
 這些權限可以讓網站管理員更精細地控制誰可以 RSVP、存取報表和管理設定。
@@ -158,6 +162,11 @@ ddev drush gen hook
 
 ### 第 26 課：區塊外掛程式與建立 RSVP 列表區塊
 
+```
+ddev drush generate plugin:block
+
+
+
 我們開始將之前建立的表單整合到一個區塊中。首先，在 rsvp_list/src/Plugin/Block 目錄下建立 RSVPBlock.php 檔案。
 
 我們建立了一個名為 RSVPBlock 的類別，它繼承自 BlockBase，並使用 @Block 註解來宣告它是一個區塊外掛程式，設定了它的 ID (rsvp_block) 和管理標籤 (RSVP block)。
@@ -167,6 +176,7 @@ build() 方法目前只回傳一些基本的標記文字。
 我們在 Drupal 管理介面的區塊版面配置中，將這個新的 RSVP 區塊放置到側邊欄。
 
 ### 第 27 課：在區塊中顯示 RSVPForm 並應用存取控制
+
 
 我們修改了 RSVPBlock.php 的 build() 方法，使用 \Drupal::formBuilder()->getForm('\Drupal\rsvp_list\Form\RSVPForm') 來回傳 RSVP 表單的 render array，使其顯示在區塊中。
 
