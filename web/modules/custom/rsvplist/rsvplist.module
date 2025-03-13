@@ -4,3 +4,19 @@
  * @file
  * Primary module hooks for rsvplist module.
  */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function rsvplist_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the block module.
+    case 'help.page.rsvplist':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The RSVP List module allows site visitors to RSVP for an event.') . '</p>';
+      return $output;
+  }
+}
