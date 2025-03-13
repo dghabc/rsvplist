@@ -1,0 +1,11 @@
+# Schema for the configuration files of the rsvplist module.
+rsvplist.settings:
+  type: config_object
+  label: 'rsvplist settings'
+  mapping:
+    allow_type:
+      type: sequence
+      label: content types dddd
+      sequence:
+        type: string
+        label: content types
