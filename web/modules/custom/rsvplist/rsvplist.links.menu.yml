@@ -1,6 +1,15 @@
-y:
+system.rsvpliist_settings:
   title: RSVP settings
   description: RSVP show in content
   parent: system.admin_config_content
-  route_name: y
+  route_name: rsvplist.config.rsvpsettings
   weight: 10
+
+system.rsvplist_report:
+  title: RSVP report
+  description: RSVP report show
+  parent: system.admin_reports
+  route_name: system.rsvplist_reports
+  weight: 10
+
+

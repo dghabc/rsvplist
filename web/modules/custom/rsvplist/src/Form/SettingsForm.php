@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\rsvplist\Form;
 
+use Drupal\node\Entity\Node;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -35,7 +36,14 @@ final class SettingsForm extends ConfigFormBase {
     if (is_null($allow)) {
       $allow = [];
     }
-    //kpr($allow);
+    kpr($allow);
+    dump($allow);
+    kint($allow);
+
+    $node = Node::load(61);
+    kint($node->toArray());
+    kint($node);
+
     // $this->messenger()->addError('');
     $types = node_type_get_names();
     $form['allowed_types'] = [

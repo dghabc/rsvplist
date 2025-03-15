@@ -5,6 +5,7 @@
  * Primary module hooks for rsvplist module.
  */
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
@@ -19,4 +20,212 @@ function rsvplist_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<p>' . t('The RSVP List module allows site visitors to RSVP for an event.') . '</p>';
       return $output;
   }
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function rsvplist_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Modification for the form with the given BASE_FORM_ID goes here. For
+  // example, if BASE_FORM_ID is "node_form", this code would run on every
+  // node form, regardless of node type.
+  $node = $form_state->getFormObject()->getEntity();
+
+
+  $type = $node->getType();
+  $config = \Drupal::config('rsvplist.settings');
+  $allow = $config->get('allow_type');
+  if (in_array($type, $allow)) {
+    $form['rsvplist'] = [
+      '#type' => 'details',
+      '#title' => t('RSVP List'),
+      '#title_display' => 'before',
+      '#access' =>
+      \Drupal::currentUser()->hasPermission('administer rsvplist configuration'),
+
+      '#group' => 'advanced',
+      '#weight' => 30,
+    ];
+    $enable = \Drupal::service('rsvplist.enable');
+    // kint($enable->isEnable($node));
+    $form['rsvplist']['isenable'] = [
+      '#type' => 'checkbox',
+      '#title' => t('Enable RSVP'),
+      '#title_display' => 'before',
+      '#default_value' => $enable->isEnable($node),
+      '#description' => t('是否启用RSVP功能'),
+    ];
+
+    foreach (array_keys($form['actions']) as $action) {
+      if ($action != 'preview' && isset($form['actions'][$action]['#type']) && $form['actions'][$action]['#type'] === 'submit') {
+        $form['actions'][$action]['#submit'][] = 'rsvplist_form_node_form_submit';
+      }
+    }
+
+  }
+}
+
+/**
+ *
+ */
+function rsvplist_form_node_form_submit($form, FormStateInterface $form_state): void {
+  $enable = \Drupal::service('rsvplist.enable');
+
+  $node = $form_state->getFormObject()->getEntity();
+  \Drupal::messenger()->addStatus($enable->isEnable($node));
+  if ($form_state->getValue(['isenable'])) {
+    $enable->setEnable($node);
+
+  }
+  else {
+    $enable->delEnable($node);
+
+  }
+}
+
+// rsvplist.views.inc 文件.
+
+/**
+ * Implements hook_views_data().
+ */
+function rsvplist_views_data() {
+  $data = [];
+
+  // 定义 rsvplist 表.
+  $data['rsvplist'] = [];
+  $data['rsvplist']['table'] = [
+  // Views UI 中的分组名称.
+    'group' => t('RSVP List'),
+    'base' => [
+  // 主键字段.
+      'field' => 'id',
+  // 表标题.
+      'title' => t('RSVP List Entries'),
+      'help' => t('Stores RSVP data per user and node.'),
+    ],
+  ];
+
+  // Rsvplist 表的字段.
+  $data['rsvplist']['id'] = [
+    'title' => t('RSVP ID'),
+    'help' => t('The primary key of the RSVP entry.'),
+    'field' => [
+      'id' => 'numeric',
+    ],
+    'sort' => [
+      'id' => 'standard',
+    ],
+    'filter' => [
+      'id' => 'numeric',
+    ],
+  ];
+
+  $data['rsvplist']['uid'] = [
+    'title' => t('User ID'),
+    'help' => t('The user who made the RSVP.'),
+    'field' => [
+      'id' => 'numeric',
+    ],
+    'sort' => [
+      'id' => 'standard',
+    ],
+    'filter' => [
+      'id' => 'numeric',
+    ],
+    'relationship' => [
+    // 关联到用户表.
+      'base' => 'users_field_data',
+      'base field' => 'uid',
+      'field' => 'uid',
+      'id' => 'standard',
+      'label' => t('RSVP User'),
+    ],
+  ];
+
+  $data['rsvplist']['nid'] = [
+    'title' => t('Node ID'),
+    'help' => t('The node this RSVP applies to.'),
+    'field' => [
+      'id' => 'numeric',
+    ],
+    'sort' => [
+      'id' => 'standard',
+    ],
+    'filter' => [
+      'id' => 'numeric',
+    ],
+    'relationship' => [
+    // 关联到节点表.
+      'base' => 'node_field_data',
+      'base field' => 'nid',
+      'field' => 'nid',
+      'id' => 'standard',
+      'label' => t('RSVP Node'),
+    ],
+  ];
+
+  $data['rsvplist']['mail'] = [
+    'title' => t('Email'),
+    'help' => t('The email of the RSVP user.'),
+    'field' => [
+      'id' => 'standard',
+    ],
+    'sort' => [
+      'id' => 'standard',
+    ],
+    'filter' => [
+      'id' => 'string',
+    ],
+  ];
+
+  $data['rsvplist']['created'] = [
+    'title' => t('Created'),
+    'help' => t('The timestamp when the RSVP was created.'),
+    'field' => [
+  // 使用日期字段处理器.
+      'id' => 'date',
+    ],
+    'sort' => [
+      'id' => 'date',
+    ],
+    'filter' => [
+      'id' => 'date',
+    ],
+  ];
+
+  // 定义 rsvplist_enable 表.
+  $data['rsvplist_enable'] = [];
+  $data['rsvplist_enable']['table'] = [
+    'group' => t('RSVP List'),
+  ];
+
+  $data['rsvplist_enable']['nid'] = [
+    'title' => t('Enabled Node ID'),
+    'help' => t('The node ID where RSVP is enabled.'),
+    'field' => [
+      'id' => 'numeric',
+    ],
+    'relationship' => [
+      'base' => 'node_field_data',
+      'base field' => 'nid',
+      'field' => 'nid',
+      'id' => 'standard',
+      'label' => t('Enabled RSVP Node'),
+    ],
+  ];
+
+  // 定义 rsvplist 与 rsvplist_enable 的关系.
+  $data['rsvplist']['rsvplist_enable_rel'] = [
+    'title' => t('RSVP Enable Status'),
+    'help' => t('Relates RSVP entries to enabled nodes.'),
+    'relationship' => [
+      'base' => 'rsvplist_enable',
+      'base field' => 'nid',
+      'field' => 'nid',
+      'id' => 'standard',
+      'label' => t('RSVP Enable Status'),
+    ],
+  ];
+
+  return $data;
 }

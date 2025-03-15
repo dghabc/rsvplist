@@ -7,8 +7,6 @@ namespace Drupal\rsvplist\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
-use function PHPUnit\Framework\isNull;
-
 /**
  * Provides a rsvplist form.
  */
@@ -28,11 +26,11 @@ final class RSVPForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state): array {
     $nid = 1;
     $node1 = \Drupal::routeMatch()->getParameter('node');
-    if (isNull($node1)) {
-      $nid = 0;
+    if (!(is_null($node1))) {
+      $nid = $node1->id();
     }
     else {
-      $nid = $node1->id();
+      $nid = 0;
     }
 
     $form['email'] = [
@@ -80,7 +78,7 @@ final class RSVPForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state): void {
-
+    $this->messenger()->addError($form_state->getValue('nid'));
     try {
       $mail = $form_state->getValue("email");
       $nid = $form_state->getValue("nid");

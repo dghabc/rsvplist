@@ -13,3 +13,11 @@ rsvplist.config.rsvpsettings:
     _form: 'Drupal\rsvplist\Form\SettingsForm'
   requirements:
     _permission: 'administer site configuration'
+
+system.rsvplist_reports:
+  path: '/admin/reports/rsvpreport'
+  defaults:
+    _title: 'Rsvplist Reports'
+    _controller: '\Drupal\rsvplist\Controller\RsvpReportController'
+  requirements:
+    _permission: 'access content'

@@ -5,6 +5,8 @@
  * Install, update and uninstall functions for the rsvplist module.
  */
 
+use Drupal\Core\Config\FileStorage;
+
 /**
  * Implements hook_schema().
  */
@@ -67,4 +69,66 @@ function rsvplist_schema(): array {
     'primary key' => ['nid'],
   ];
   return $schema;
+}
+
+/**
+ * @file
+ * Contains rsvp.install.
+ */
+
+/**
+ * Implements hook_install().
+ */
+/**
+ *
+ */
+function rsvplist_install() {
+  $config_factory = \Drupal::configFactory();
+  $storage = new FileStorage(\Drupal::service('module_handler')->getModule('rsvplist')->getPath() . '/config/install');
+
+  // 导入 Views 配置.
+  try {
+    $views_config_data = $storage->read('views.view.rsvp');
+    if ($views_config_data && !$config_factory->get('views.view.rsvp')->get()) {
+      $config_factory->getEditable('views.view.rsvp')->setData($views_config_data)->save();
+      \Drupal::logger('rsvplist')->notice('Imported views.view.rsvp configuration.');
+    }
+    elseif (!$views_config_data) {
+      \Drupal::logger('rsvplist')->warning('Views configuration views.view.rsvp not found in install storage.');
+    }
+  }
+  catch (\Exception $e) {
+    \Drupal::logger('rsvplist')->error('Error importing views.view.rsvp: @message', ['@message' => $e->getMessage()]);
+  }
+
+  // 导入 Block 配置.
+  try {
+    $block_config_data = $storage->read('block.block.olivero_rsvpblock');
+    if ($block_config_data && !$config_factory->get('block.block.olivero_rsvpblock')->get()) {
+      $config_factory->getEditable('block.block.olivero_rsvpblock')->setData($block_config_data)->save();
+      \Drupal::logger('rsvplist')->notice('Imported block.block.olivero_rsvpblock configuration.');
+    }
+    elseif (!$block_config_data) {
+      \Drupal::logger('rsvplist')->warning('Block configuration block.block.olivero_rsvpblock not found in install storage.');
+    }
+  }
+  catch (\Exception $e) {
+    \Drupal::logger('rsvplist')->error('Error importing block.block.olivero_rsvpblock: @message', ['@message' => $e->getMessage()]);
+  }
+}
+
+/**
+ * @file
+ * Contains your_module.install.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function rsvplist_uninstall($uninstalling_module) {
+  // 移除 Views 設定。.
+  $config_factory = \Drupal::configFactory();
+  $config_factory->getEditable('views.view.rsvp')->delete();
+  // 移除 区块 設定。.
+  $config_factory->getEditable('block.block.olivero_rsvpblock')->delete();
 }
